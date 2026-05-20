@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "title": "Intellectual Property Basics",
+        "description": "Test your knowledge on the basics of Copyright, Trademarks, and Patents.",
+        "reward_xp": 150,
+        "created_at": "2026-05-20T04:23:52.000000Z",
+        "updated_at": "2026-05-20T04:23:52.000000Z"
+    },
+    {
+        "id": 2,
+        "title": "Advanced IP Concepts",
+        "description": "Dive deeper into Trade Secrets and infringements.",
+        "reward_xp": 200,
+        "created_at": "2026-05-20T04:23:52.000000Z",
+        "updated_at": "2026-05-20T04:23:52.000000Z"
+    }
+]

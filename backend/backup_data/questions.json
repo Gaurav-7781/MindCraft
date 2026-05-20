@@ -1,0 +1,72 @@
+[
+    {
+        "id": 1,
+        "quiz_id": 1,
+        "question_text": "What does a copyright protect?",
+        "options": [
+            "An invention",
+            "A brand name",
+            "Original works of authorship",
+            "A secret formula"
+        ],
+        "correct_answer": "Original works of authorship",
+        "created_at": "2026-05-20T04:23:52.000000Z",
+        "updated_at": "2026-05-20T04:23:52.000000Z"
+    },
+    {
+        "id": 2,
+        "quiz_id": 1,
+        "question_text": "How long does a patent usually last?",
+        "options": [
+            "10 years",
+            "20 years",
+            "50 years",
+            "Forever"
+        ],
+        "correct_answer": "20 years",
+        "created_at": "2026-05-20T04:23:52.000000Z",
+        "updated_at": "2026-05-20T04:23:52.000000Z"
+    },
+    {
+        "id": 3,
+        "quiz_id": 1,
+        "question_text": "Which of the following is protected by a trademark?",
+        "options": [
+            "A novel",
+            "A scientific discovery",
+            "A company logo",
+            "A musical composition"
+        ],
+        "correct_answer": "A company logo",
+        "created_at": "2026-05-20T04:23:52.000000Z",
+        "updated_at": "2026-05-20T04:23:52.000000Z"
+    },
+    {
+        "id": 4,
+        "quiz_id": 2,
+        "question_text": "What is the main requirement for a trade secret?",
+        "options": [
+            "It must be registered with the government",
+            "It must be kept secret to maintain its value",
+            "It must be an artistic work",
+            "It expires after 20 years"
+        ],
+        "correct_answer": "It must be kept secret to maintain its value",
+        "created_at": "2026-05-20T04:23:52.000000Z",
+        "updated_at": "2026-05-20T04:23:52.000000Z"
+    },
+    {
+        "id": 5,
+        "quiz_id": 2,
+        "question_text": "Which IP right is the Coca-Cola recipe protected by?",
+        "options": [
+            "Patent",
+            "Copyright",
+            "Trademark",
+            "Trade Secret"
+        ],
+        "correct_answer": "Trade Secret",
+        "created_at": "2026-05-20T04:23:52.000000Z",
+        "updated_at": "2026-05-20T04:23:52.000000Z"
+    }
+]
