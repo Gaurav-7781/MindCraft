@@ -9,6 +9,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\GameScoreController;
+use App\Http\Controllers\ModuleProgressController;
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
@@ -22,4 +23,23 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Games
     Route::post('/games/score', [GameScoreController::class, 'store']);
+
+    // Module Progress
+    Route::get('/modules/progress', [ModuleProgressController::class, 'index']);
+    Route::post('/modules/progress', [ModuleProgressController::class, 'store']);
+
+    // Achievements
+    Route::get('/achievements', [\App\Http\Controllers\AchievementController::class, 'index']);
+
+    // Leaderboard
+    Route::get('/leaderboard', [\App\Http\Controllers\LeaderboardController::class, 'index']);
+
+    // Scenarios
+    Route::get('/scenarios', [\App\Http\Controllers\ScenarioController::class, 'index']);
+    Route::get('/scenarios/{id}', [\App\Http\Controllers\ScenarioController::class, 'show']);
+
+    // Admin Routes
+    Route::middleware([\App\Http\Middleware\AdminMiddleware::class])->group(function () {
+        Route::get('/admin/stats', [\App\Http\Controllers\AdminController::class, 'stats']);
+    });
 });

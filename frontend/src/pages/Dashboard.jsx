@@ -21,7 +21,7 @@ export default function Dashboard() {
     // Refresh user data to get latest XP and Level
     const fetchUser = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/user', {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/user`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUser(response.data);
@@ -36,7 +36,7 @@ export default function Dashboard() {
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://127.0.0.1:8000/api/logout', {}, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/logout`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
     } catch (err) {
@@ -66,12 +66,6 @@ export default function Dashboard() {
             <div className="text-sm text-cyber-light/80">Level {user.level || 1}</div>
             <div className="text-xl font-bold text-cyber-purple">{user.xp || 0} XP</div>
           </div>
-          <button 
-            onClick={handleLogout}
-            className="px-6 py-2 rounded-lg bg-cyber-pink/20 text-cyber-pink hover:bg-cyber-pink hover:text-white transition-colors border border-cyber-pink/50 font-semibold shadow-btn-glow"
-          >
-            Logout
-          </button>
         </div>
       </header>
 
@@ -132,6 +126,66 @@ export default function Dashboard() {
               className="px-6 py-2 bg-gradient-to-r from-cyber-blue to-cyber-cyan text-cyber-darker font-bold rounded-lg hover:opacity-90 transition-opacity"
             >
               Play IP Catcher
+            </button>
+          </div>
+        </motion.div>
+
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="glass-panel p-6 rounded-2xl glass-panel-hover flex flex-col"
+        >
+          <h2 className="text-2xl font-bold mb-4 text-cyber-pink">Achievements</h2>
+          <div className="bg-cyber-dark/50 border border-white/5 rounded-xl p-6 flex-1 flex flex-col items-center justify-center text-center">
+            <p className="text-cyber-light/60 mb-4">
+              View your badges and track your progress!
+            </p>
+            <button 
+              onClick={() => navigate('/achievements')}
+              className="px-6 py-2 bg-gradient-to-r from-cyber-pink to-cyber-purple text-cyber-darker font-bold rounded-lg hover:opacity-90 transition-opacity"
+            >
+              View Trophies
+            </button>
+          </div>
+        </motion.div>
+
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="glass-panel p-6 rounded-2xl glass-panel-hover flex flex-col"
+        >
+          <h2 className="text-2xl font-bold mb-4 text-yellow-400">Leaderboard</h2>
+          <div className="bg-cyber-dark/50 border border-white/5 rounded-xl p-6 flex-1 flex flex-col items-center justify-center text-center">
+            <p className="text-cyber-light/60 mb-4">
+              See where you stand globally!
+            </p>
+            <button 
+              onClick={() => navigate('/leaderboard')}
+              className="px-6 py-2 bg-gradient-to-r from-yellow-400 to-amber-600 text-cyber-darker font-bold rounded-lg hover:opacity-90 transition-opacity"
+            >
+              Check Rankings
+            </button>
+          </div>
+        </motion.div>
+
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="glass-panel p-6 rounded-2xl glass-panel-hover flex flex-col md:col-span-2 lg:col-span-3 xl:col-span-1"
+        >
+          <h2 className="text-2xl font-bold mb-4 text-emerald-400">IP Scenarios</h2>
+          <div className="bg-cyber-dark/50 border border-white/5 rounded-xl p-6 flex-1 flex flex-col items-center justify-center text-center">
+            <p className="text-cyber-light/60 mb-4">
+              Navigate real-world IP disputes and make critical decisions!
+            </p>
+            <button 
+              onClick={() => navigate('/scenarios')}
+              className="px-6 py-2 bg-gradient-to-r from-emerald-400 to-teal-500 text-cyber-darker font-bold rounded-lg hover:opacity-90 transition-opacity"
+            >
+              Play Scenarios
             </button>
           </div>
         </motion.div>

@@ -12,11 +12,12 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/login', {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/login`, {
         email, password
       });
       localStorage.setItem('token', response.data.access_token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
+      window.dispatchEvent(new Event('authChange'));
       navigate('/dashboard');
     } catch (err) {
       setError('Invalid login details');

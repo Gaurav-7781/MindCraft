@@ -31,10 +31,11 @@ export default function ThemeToggle() {
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
       onClick={toggleTheme}
-      className="fixed top-6 right-6 z-50 p-3 rounded-full bg-cyber-dark/80 border border-white/20 text-cyber-light shadow-btn-glow hover:border-cyber-cyan/50 hover:text-cyber-cyan transition-colors backdrop-blur-md"
+      className="p-2 rounded-full bg-cyber-dark/80 border border-white/20 text-cyber-light shadow-btn-glow hover:border-cyber-cyan/50 hover:text-cyber-cyan transition-colors backdrop-blur-md"
+      title="Toggle Theme"
       aria-label="Toggle Theme"
     >
-      {isLight ? <Moon className="w-6 h-6" /> : <Sun className="w-6 h-6" />}
+      {isLight ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
     </motion.button>
   );
 }

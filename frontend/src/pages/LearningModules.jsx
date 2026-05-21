@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, BookOpen, Star, Shield, Lock } from 'lucide-react';
+import { ChevronDown, BookOpen, Star, Shield, Lock, CheckCircle } from 'lucide-react';
 import MindyMascot from '../components/MindyMascot';
 import { Link } from 'react-router-dom';
-
+import axios from 'axios';
 const modules = [
   {
     id: 'copyright',
@@ -90,6 +90,46 @@ const modules = [
 export default function LearningModules() {
   const [activeModule, setActiveModule] = useState(null);
   const [mindyMessage, setMindyMessage] = useState("Select a module to start learning! I recommend starting with Copyrights.");
+  const [progress, setProgress] = useState([]);
+
+  useEffect(() => {
+    fetchProgress();
+  }, []);
+
+  const fetchProgress = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/modules/progress`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setProgress(response.data);
+    } catch (error) {
+      console.error('Failed to fetch progress:', error);
+    }
+  };
+
+  const markComplete = async (moduleId, e) => {
+    e.stopPropagation(); // prevent closing the module accordion
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      await axios.post(`${import.meta.env.VITE_API_URL}/modules/progress`, {
+        module_id: moduleId,
+        status: 'completed'
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setMindyMessage("Awesome! You completed a module. +50 XP (Simulated)");
+      fetchProgress();
+    } catch (error) {
+      console.error('Failed to mark complete:', error);
+    }
+  };
+
+  const isCompleted = (moduleId) => {
+    return progress.some(p => p.module_id === moduleId && p.status === 'completed');
+  };
 
   const handleModuleClick = (mod) => {
     if (activeModule === mod.id) {
@@ -133,7 +173,10 @@ export default function LearningModules() {
                   {mod.icon}
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-white m-0">{mod.title}</h2>
+                  <div className="flex items-center gap-4">
+                    {isCompleted(mod.id) && <CheckCircle className="w-6 h-6 text-green-400" />}
+                    <h2 className="text-2xl font-bold text-white m-0">{mod.title}</h2>
+                  </div>
                   <p className="text-sm text-cyber-light/60 mt-1">{mod.description}</p>
                 </div>
               </div>
@@ -158,10 +201,18 @@ export default function LearningModules() {
                       <FlipCard key={idx} term={item.term} definition={item.definition} />
                     ))}
                   </div>
-                  <div className="mt-6 text-center">
+                  <div className="mt-6 flex justify-center gap-4">
                     <Link to="/quizzes" className="inline-block px-6 py-2 bg-gradient-to-r from-cyber-purple to-cyber-blue rounded-full font-bold shadow-[0_0_15px_rgba(58,134,255,0.4)] hover:opacity-90 transition-opacity">
                       Take {mod.title} Quiz
                     </Link>
+                    {!isCompleted(mod.id) && (
+                      <button 
+                        onClick={(e) => markComplete(mod.id, e)}
+                        className="inline-block px-6 py-2 bg-cyber-darker border border-green-400 text-green-400 rounded-full font-bold hover:bg-green-400 hover:text-cyber-darker transition-colors"
+                      >
+                        Mark Complete
+                      </button>
+                    )}
                   </div>
                 </motion.div>
               )}

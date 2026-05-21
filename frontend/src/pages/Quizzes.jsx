@@ -19,7 +19,7 @@ function Quizzes() {
   const fetchQuizzes = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://127.0.0.1:8000/api/quizzes', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/quizzes`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -58,7 +58,7 @@ function Quizzes() {
   const submitQuiz = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://127.0.0.1:8000/api/quizzes/${activeQuiz.id}/submit`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/quizzes/${activeQuiz.id}/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

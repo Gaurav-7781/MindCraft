@@ -3,16 +3,17 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import IPRGame from '../games/IPRGame';
+import TrademarkGame from '../games/TrademarkGame';
 import MindyMascot from '../components/MindyMascot';
 
 export default function GamePage() {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [activeGame, setActiveGame] = useState(null); // 'ip_catcher' or 'tm_matcher'
   const [lastScore, setLastScore] = useState(null);
   const [gamificationResult, setGamificationResult] = useState(null);
-  const [mindyMessage, setMindyMessage] = useState("Ready for a challenge? Catch the original ideas (purple) and avoid the infringements (pink)!");
+  const [mindyMessage, setMindyMessage] = useState("Ready for a challenge? Choose a game to test your IP knowledge!");
 
   const handleGameOver = async (score) => {
-    setIsPlaying(false);
+    setActiveGame(null);
     setLastScore(score);
     
     if (score > 50) {
@@ -23,8 +24,8 @@ export default function GamePage() {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post('http://127.0.0.1:8000/api/games/score', 
-        { game_name: 'IP_Catcher', score }, 
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/games/score`, 
+        { game_name: activeGame || 'unknown', score }, 
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setGamificationResult(response.data.gamification);
@@ -39,7 +40,7 @@ export default function GamePage() {
       
       <header className="mb-8 text-center relative z-10 w-full max-w-4xl flex justify-between items-center">
         <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyber-cyan to-cyber-blue m-0">
-          IP Catcher Mini-Game
+          IP Arcade
         </h1>
         <Link to="/dashboard" className="px-4 py-2 bg-cyber-dark/80 border border-white/20 rounded-lg text-cyber-light hover:bg-white/10 transition-colors">
           Back to Dashboard
@@ -47,21 +48,14 @@ export default function GamePage() {
       </header>
 
       <main className="w-full max-w-4xl relative z-10 flex flex-col items-center">
-        {!isPlaying ? (
+        {!activeGame ? (
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="glass-panel p-12 rounded-3xl text-center w-full max-w-2xl"
+            className="w-full max-w-3xl"
           >
-            <h2 className="text-3xl font-bold mb-4 text-cyber-purple">Protect Your Ideas!</h2>
-            <p className="text-cyber-light/80 mb-8 text-lg">
-              Use the <strong>Left</strong> and <strong>Right</strong> arrow keys to move. 
-              Use <strong>Up</strong> to jump. Catch the original ideas (purple circles) for +10 points. 
-              Avoid the stolen ideas (pink squares) or lose 5 points. You have 30 seconds!
-            </p>
-            
             {lastScore !== null && (
-              <div className="mb-8 p-6 bg-cyber-cyan/10 border border-cyber-cyan/30 rounded-xl relative overflow-hidden">
+              <div className="mb-8 p-6 bg-cyber-cyan/10 border border-cyber-cyan/30 rounded-xl relative overflow-hidden text-center">
                 {gamificationResult?.leveled_up && (
                   <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-cyber-cyan/20 to-cyber-purple/20 animate-pulse -z-10" />
                 )}
@@ -77,20 +71,42 @@ export default function GamePage() {
               </div>
             )}
             
-            <button 
-              onClick={() => { setIsPlaying(true); setMindyMessage("Go go go! Protect that IP!"); }}
-              className="px-10 py-4 bg-gradient-to-r from-cyber-purple to-cyber-cyan text-cyber-darker text-xl font-bold rounded-xl shadow-btn-glow hover:scale-105 transition-transform"
-            >
-              Start Mission
-            </button>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="glass-panel p-8 rounded-3xl text-center flex flex-col border border-cyber-blue/30 hover:border-cyber-cyan transition-colors">
+                <h2 className="text-3xl font-bold mb-4 text-cyber-blue">IP Catcher</h2>
+                <p className="text-cyber-light/80 mb-8 flex-1">
+                  Use arrow keys to move. Catch original ideas (purple) and avoid infringements (pink)!
+                </p>
+                <button 
+                  onClick={() => { setActiveGame('ip_catcher'); setMindyMessage("Go go go! Protect that IP!"); }}
+                  className="w-full py-4 bg-gradient-to-r from-cyber-blue to-cyber-cyan text-cyber-darker text-xl font-bold rounded-xl shadow-[0_0_15px_rgba(0,240,255,0.4)] hover:scale-105 transition-transform"
+                >
+                  Play
+                </button>
+              </div>
+
+              <div className="glass-panel p-8 rounded-3xl text-center flex flex-col border border-cyber-purple/30 hover:border-cyber-pink transition-colors">
+                <h2 className="text-3xl font-bold mb-4 text-cyber-purple">Trademark Matcher</h2>
+                <p className="text-cyber-light/80 mb-8 flex-1">
+                  Flip cards to match famous brands with their protected trademark types. Minimize your moves!
+                </p>
+                <button 
+                  onClick={() => { setActiveGame('tm_matcher'); setMindyMessage("Match the brand to what's protected. Good luck!"); }}
+                  className="w-full py-4 bg-gradient-to-r from-cyber-purple to-cyber-pink text-white text-xl font-bold rounded-xl shadow-[0_0_15px_rgba(255,0,128,0.4)] hover:scale-105 transition-transform"
+                >
+                  Play
+                </button>
+              </div>
+            </div>
           </motion.div>
         ) : (
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col items-center"
+            className="flex flex-col items-center w-full"
           >
-            <IPRGame onGameOver={handleGameOver} />
+            {activeGame === 'ip_catcher' && <IPRGame onGameOver={handleGameOver} />}
+            {activeGame === 'tm_matcher' && <TrademarkGame onGameOver={handleGameOver} />}
           </motion.div>
         )}
       </main>
