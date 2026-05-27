@@ -25,6 +25,7 @@ class User extends Authenticatable
         'password',
         'xp',
         'level',
+        'role',
     ];
 
     /**
@@ -88,5 +89,24 @@ class User extends Authenticatable
     public function achievements()
     {
         return $this->belongsToMany(Achievement::class, 'user_achievements');
+    }
+
+    public function tokens()
+    {
+        return $this->morphMany(\App\Models\PersonalAccessToken::class, 'tokenable');
+    }
+
+    public function createToken(string $name, array $abilities = ['*'], \DateTimeInterface $expiresAt = null)
+    {
+        $plainTextToken = \Illuminate\Support\Str::random(40);
+
+        $token = $this->tokens()->create([
+            'name' => $name,
+            'token' => hash('sha256', $plainTextToken),
+            'abilities' => $abilities,
+            'expires_at' => $expiresAt,
+        ]);
+
+        return new \App\Models\NewAccessToken($token, $token->getKey().'|'.$plainTextToken);
     }
 }
