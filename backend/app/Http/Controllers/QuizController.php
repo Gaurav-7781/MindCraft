@@ -35,7 +35,17 @@ class QuizController extends Controller
         $user = Auth::user();
         $gamificationResult = [];
         if ($xpEarned > 0) {
-            $gamificationResult = $user->addXP($xpEarned);
+            if (method_exists($user, 'addXP')) {
+                $gamificationResult = $user->{'addXP'}($xpEarned);
+            } elseif (method_exists($user, 'addXp')) {
+                $gamificationResult = $user->{'addXp'}($xpEarned);
+            } else {
+                $user->xp = ($user->xp ?? 0) + $xpEarned;
+                if (method_exists($user, 'save')) {
+                    $user->save();
+                }
+                $gamificationResult = ['xp' => $user->xp, 'earned' => $xpEarned];
+            }
         }
 
         return response()->json([
